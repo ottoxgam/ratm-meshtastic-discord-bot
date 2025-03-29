@@ -247,10 +247,9 @@ if (!process.env.DISCORD_WEBHOOK_URL) {
   process.exit(-1);
 }
 
-// Manually set the URLs
-//const baWebhookUrl = process.env.DISCORD_WEBHOOK_URL;
-//const baMsWebhookUrl = process.env.DISCORD_MS_WEBOOK_URL;
-//const svWebhookUrl = process.env.SV_DISCORD_WEBHOOK_URL;
+const baWebhookUrl = process.env.DISCORD_WEBHOOK_URL;
+const baMsWebhookUrl = process.env.DISCORD_MS_WEBOOK_URL;
+const svWebhookUrl = process.env.SV_DISCORD_WEBHOOK_URL;
 
 const mesh_topic = process.env.MQTT_TOPIC || "msh/US/CA/socalmesh";
 const grouping_duration = parseInt(process.env.GROUPING_DURATION || "10000");
