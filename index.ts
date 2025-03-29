@@ -70,7 +70,7 @@ if (process.env.RBL_JSON_URL) {
 }
 
 const mqttBrokerUrl = "mqtt://mqtt.meshtastic.org"; // the original project took a nose dive, so this server is trash
-const basymeshMqttBrokerUrl = "mqtt://mqtt.bayme.sh";
+const KK6VSYMqttBrokerUrl = "mqtt://192.168.10.14";
 const mqttUsername = "meshdev";
 const mqttPassword = "large4cats";
 
@@ -83,7 +83,7 @@ const redisClient = createClient({
     // Connect to redis server
     await redisClient.connect();
     logger.info(`Setting active instance id to ${INSTANCE_ID}`);
-    redisClient.set(`baymesh:active`, INSTANCE_ID);
+    redisClient.set(`socalmesh:active`, INSTANCE_ID);
   }
 })();
 
@@ -251,7 +251,7 @@ const baWebhookUrl = process.env.DISCORD_WEBHOOK_URL;
 const baMsWebhookUrl = process.env.DISCORD_MS_WEBOOK_URL;
 const svWebhookUrl = process.env.SV_DISCORD_WEBHOOK_URL;
 
-const mesh_topic = process.env.MQTT_TOPIC || "msh/US/bayarea";
+const mesh_topic = process.env.MQTT_TOPIC || "msh/US/CA/socalmesh";
 const grouping_duration = parseInt(process.env.GROUPING_DURATION || "10000");
 
 function sendDiscordMessage(webhookUrl: string, payload: any) {
@@ -452,7 +452,8 @@ const createDiscordMessage = async (packetGroup, text) => {
 
     if (
       packetGroup.serviceEnvelopes.filter((envelope) =>
-        ba_home_topics.some((home_topic) =>
+        socal_mesh_home_topics
+    .some((home_topic) =>
           envelope.topic.startsWith(home_topic),
         ),
       ).length > 0
@@ -469,7 +470,7 @@ const createDiscordMessage = async (packetGroup, text) => {
 
     if (
       packetGroup.serviceEnvelopes.filter((envelope) =>
-        sv_home_topics.some((home_topic) =>
+        private_mesh_topics.some((home_topic) =>
           envelope.topic.startsWith(home_topic),
         ),
       ).length > 0
@@ -489,32 +490,26 @@ const createDiscordMessage = async (packetGroup, text) => {
 //   password: mqttPassword,
 // });
 
-const baymesh_client = mqtt.connect(basymeshMqttBrokerUrl, {
+const socalmesh_client = mqtt.connect(KK6VSYMqttBrokerUrl, {
   username: mqttUsername,
   password: mqttPassword,
 });
 
-const ba_home_topics = [
-  "msh/US/bayarea",
-  "msh/US/BayArea",
-  "msh/US/CA/bayarea",
-  "msh/US/CA/BayArea",
+const socal_mesh_home_topics = [
+  "msh/US/CA/socalmesh",
+  "msh/US/CA/SoCalMesh",
 ];
 
-const sv_home_topics = [
-  "msh/US/sacvalley",
-  "msh/US/SacValley",
-  "msh/US/CA/sacvalley",
+const private_mesh_topics = [
   "msh/US/CA/SacValley",
 ];
 
 // home_topics is both ba and sv
-const home_topics = ba_home_topics.concat(sv_home_topics);
+const home_topics = socal_mesh_home_topics.concat(private_mesh_topics);
 
 const nodes_to_log_all_positions = [
-  "fa6dc348", // me
-  "3b46b95c", // ohr
-  "33686ed8", // balloon
+  "43b6ff0c", // me
+  "433ea8d0", // mobile
 ];
 
 const subbed_topics = ["msh/US"];
@@ -522,14 +517,15 @@ const subbed_topics = ["msh/US"];
 // run every 5 seconds and pop off from the queue
 const processing_timer = setInterval(() => {
   if (process.env.REDIS_ENABLED === "true") {
-    redisClient.get(`baymesh:active`).then((active_instance) => {
+    redisClient.get(`socalmesh:active`).then((active_instance) => {
       if (active_instance && active_instance !== INSTANCE_ID) {
         logger.error(
           `Stopping RATM instance; active_instance: ${active_instance} this instance: ${INSTANCE_ID}`,
         );
         clearInterval(processing_timer); // do we want to kill it so fast? what about things in the queue?
         // subbed_topics.forEach((topic) => client.unsubscribe(topic));
-        subbed_topics.forEach((topic) => baymesh_client.unsubscribe(topic));
+        subbed_topics.forEach((topic) => socalmesh_client
+      .unsubscribe(topic));
       }
     });
   }
@@ -552,13 +548,14 @@ function sub(the_client: mqtt.MqttClient, topic: string) {
 }
 
 // subscribe to everything when connected
-baymesh_client.on("connect", () => {
+socalmesh_client.on("connect", () => {
   logger.info(`Connected to Private MQTT broker`);
-  subbed_topics.forEach((topic) => sub(baymesh_client, topic));
+  subbed_topics.forEach((topic) => sub(socalmesh_client
+  , topic));
 });
 
 // handle message received
-baymesh_client.on("message", async (topic: string, message: any) => {
+socalmesh_client.on("message", async (topic: string, message: any) => {
   try {
     if (topic.includes("msh")) {
       if (!topic.includes("/json")) {
