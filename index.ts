@@ -487,7 +487,7 @@ const createDiscordMessage = async (packetGroup, text) => {
   }
 };
 
- const client = mqtt.connect(mqttBrokerUrl, {
+ const socalmesh_client = mqtt.connect(mqttBrokerUrl, {
    username: mqttUsername,
    password: mqttPassword,
  });
