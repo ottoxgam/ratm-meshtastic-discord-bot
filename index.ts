@@ -147,6 +147,7 @@ const updateNodeDB = (
     fs.writeFileSync(
       path.join(__dirname, "./nodeDB.json"),
       JSON.stringify(nodeDB, null, 2),
+      console.log("[DEBUG] Current nodeDB contents:", JSON.stringify(nodeDB, null, 2));
     );
   } catch (err) {
     // logger.error(err.message);
@@ -281,7 +282,6 @@ function processTextMessage(packetGroup: PacketGroup) {
 const createDiscordMessage = async (packetGroup, text) => {
   try {
     const packet = packetGroup.serviceEnvelopes[0].packet;
-    logger.debug("packet: " + packet);
     const to = nodeId2hex(packet.to);
     const from = nodeId2hex(packet.from);
     const nodeIdHex = nodeId2hex(from);
