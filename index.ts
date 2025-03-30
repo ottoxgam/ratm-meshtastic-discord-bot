@@ -147,7 +147,7 @@ const updateNodeDB = (
     fs.writeFileSync(
       path.join(__dirname, "./nodeDB.json"),
       JSON.stringify(nodeDB, null, 2),
-      console.log("[DEBUG] Current nodeDB contents:", JSON.stringify(nodeDB, null, 2));
+      console.log("[DEBUG] Current nodeDB contents:", JSON.stringify(nodeDB, null, 2)),
     );
   } catch (err) {
     // logger.error(err.message);
