@@ -248,7 +248,7 @@ if (!process.env.DISCORD_WEBHOOK_URL) {
 }
 
 const LFwebhookUrl = process.env.DISCORD_WEBHOOK_URL;
-const MsLFWebhookUrl = process.env.DISCORD_MS_WEBOOK_URL;
+const MsWebhookUrl = process.env.DISCORD_MS_WEBOOK_URL;
 const svLFWebhookUrl = process.env.SV_DISCORD_WEBHOOK_URL;
 
 const mesh_topic = process.env.MQTT_TOPIC || "msh/US/CA/socalmesh";
@@ -344,7 +344,7 @@ const createDiscordMessage = async (packetGroup, text) => {
     // console.log("maxHopStart", maxHopStart);
 
     const content = {
-      username: "Mesh Bot",
+      username: "Captain Hook",
       avatar_url:
         "https://cdn.discordapp.com/app-icons/1240017058046152845/295e77bec5f9a44f7311cf8723e9c332.png",
       embeds: [
@@ -459,14 +459,15 @@ const createDiscordMessage = async (packetGroup, text) => {
       ).length > 0
     ) {
       if (
-       &&
+        MsWebhookUrl &&
         packetGroup.serviceEnvelopes[0].channelId === "MediumSlow"
       ) {
-        sendDiscordMessage, content);
+        sendDiscordMessage(MsWebhookUrl, content);
       } else {
-        sendDiscordMessageLf, content);
+        sendDiscordMessage(LFwebhookUrl, content);
       }
     }
+
 
     if (
       packetGroup.serviceEnvelopes.filter((envelope) =>
