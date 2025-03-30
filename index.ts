@@ -501,6 +501,7 @@ const createDiscordMessage = async (packetGroup, text) => {
 const socal_mesh_home_topics = [
   "msh/US/CA/socalmesh",
   "msh/US/CA/SoCalMesh",
+  "msh/US/mqtt-bayme-sh",
 ];
 
 const private_mesh_topics = [
