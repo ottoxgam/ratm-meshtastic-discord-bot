@@ -69,7 +69,7 @@ if (process.env.RBL_JSON_URL) {
   });
 }
 
-const mqttBrokerUrl = "mqtt://mqtt.meshtastic.org"; // the original project took a nose dive, so this server is trash
+const mqttBrokerUrl = "mqtt://mqtt.bayme.sh"; // the original project took a nose dive, so this server is trash
 const KK6VSYMqttBrokerUrl = "mqtt://192.168.10.14";
 const mqttUsername = "meshdev";
 const mqttPassword = "large4cats";
@@ -501,7 +501,7 @@ const createDiscordMessage = async (packetGroup, text) => {
 const socal_mesh_home_topics = [
   "msh/US/CA/socalmesh",
   "msh/US/CA/SoCalMesh",
-  "msh/US/mqtt-bayme-sh",
+  "msh/US/bayarea",
 ];
 
 const private_mesh_topics = [
