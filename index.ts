@@ -147,7 +147,6 @@ const updateNodeDB = (
     fs.writeFileSync(
       path.join(__dirname, "./nodeDB.json"),
       JSON.stringify(nodeDB, null, 2),
-      console.log("[DEBUG] Current nodeDB contents:", JSON.stringify(nodeDB, null, 2)),
     );
   } catch (err) {
     // logger.error(err.message);
@@ -207,12 +206,13 @@ const getNodeInfos = async (nodeIds: string[], debug: boolean) => {
 
 const getNodeName = (nodeId: string | number) => {
   const nodeIdHex = nodeId2hex(nodeId);
-  console.log(`[DEBUG] Looking up Node ID: ${nodeIdHex}`);
-  console.log(`[DEBUG] nodeDB Entry:`, nodeDB[nodeIdHex]);  
+  console.log("[DEBUG] nodeId2hex output:", nodeId2hex(nodeId));
+  logger.debug(` Looking up Node ID by hex: ${nodeId}`);
+  logger.debug(` nodeDB Entry:`, nodeDB[nodeId]);  
 
   const nodeData = nodeDB[nodeIdHex];
   const longName = nodeData?.longName || "Unknown";
-  console.log(`[DEBUG] Final longName: ${longName}`);
+  logger.debug(` Final longName: ${longName}`);
   return longName;
 };
 
@@ -597,7 +597,7 @@ socalmesh_client.on("message", async (topic: string, message: any) => {
         ) {
           // return;
         } else {
-          // logger.info("Message received on topic: " + topic);
+           logger.info("Message received on topic: " + topic);
           return;
         }
 
@@ -619,7 +619,7 @@ socalmesh_client.on("message", async (topic: string, message: any) => {
 
         if (cache.add(shaHash(envelope))) {
           // periodically print the nodeDB to the console
-          console.log(JSON.stringify(nodeDB));
+          //console.log(JSON.stringify(nodeDB));
         }
 
         meshPacketQueue.add(envelope, topic, "socalmesh");
