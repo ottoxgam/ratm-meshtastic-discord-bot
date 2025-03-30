@@ -487,15 +487,15 @@ const createDiscordMessage = async (packetGroup, text) => {
   }
 };
 
-// const client = mqtt.connect(mqttBrokerUrl, {
-//   username: mqttUsername,
-//   password: mqttPassword,
-// });
+ const client = mqtt.connect(mqttBrokerUrl, {
+   username: mqttUsername,
+   password: mqttPassword,
+ });
 
-const socalmesh_client = mqtt.connect(KK6VSYMqttBrokerUrl, {
-  username: mqttUsername,
-  password: mqttPassword,
-});
+//const socalmesh_client = mqtt.connect(KK6VSYMqttBrokerUrl, {
+//  username: mqttUsername,
+//  password: mqttPassword,
+//});
 
 const socal_mesh_home_topics = [
   "msh/US/CA/socalmesh",
