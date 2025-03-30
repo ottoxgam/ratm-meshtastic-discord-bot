@@ -247,18 +247,18 @@ if (!process.env.DISCORD_WEBHOOK_URL) {
   process.exit(-1);
 }
 
-const baWebhookUrl = process.env.DISCORD_WEBHOOK_URL;
-const baMsWebhookUrl = process.env.DISCORD_MS_WEBOOK_URL;
-const svWebhookUrl = process.env.SV_DISCORD_WEBHOOK_URL;
+const LFwebhookUrl = process.env.DISCORD_WEBHOOK_URL;
+const MsLFWebhookUrl = process.env.DISCORD_MS_WEBOOK_URL;
+const svLFWebhookUrl = process.env.SV_DISCORD_WEBHOOK_URL;
 
 const mesh_topic = process.env.MQTT_TOPIC || "msh/US/CA/socalmesh";
 const grouping_duration = parseInt(process.env.GROUPING_DURATION || "10000");
 
-function sendDiscordMessage(webhookUrl: string, payload: any) {
+function sendDiscordMessage(LFwebhookUrl: string, payload: any) {
   const data = typeof payload === "string" ? { content: payload } : payload;
 
   return axios
-    .post(webhookUrl, data)
+    .post(LFwebhookUrl, data)
     .then(() => {
       // console.log("Message sent successfully");
     })
@@ -349,13 +349,13 @@ const createDiscordMessage = async (packetGroup, text) => {
         "https://cdn.discordapp.com/app-icons/1240017058046152845/295e77bec5f9a44f7311cf8723e9c332.png",
       embeds: [
         {
-          url: `https://meshview.rouvier.org/packet_list/${packet.from}`,
+          url: `https://meshview.kk6vsy.com/packet_list/${packet.from}`,
           color: 6810260,
           timestamp: new Date(packet.rxTime * 1000).toISOString(),
 
           author: {
             name: `${nodeInfos[nodeIdHex] ? nodeInfos[nodeIdHex].longName : "Unknown"}`,
-            url: `https://meshview.rouvier.org/packet_list/${packet.from}`,
+            url: `https://meshview.kk6vsy.com/packet_list/${packet.from}`,
             icon_url: avatarUrl,
           },
           title: `${nodeInfos[nodeIdHex] ? nodeInfos[nodeIdHex].shortName : "UNK"}`,
@@ -372,7 +372,7 @@ const createDiscordMessage = async (packetGroup, text) => {
             // },
             {
               name: "Packet",
-              value: `[${packetGroup.id.toString(16)}](https://meshview.rouvier.org/packet/${packetGroup.id})`,
+              value: `[${packetGroup.id.toString(16)}](https://meshview.kk6vsy.com/packet/${packetGroup.id})`,
               inline: true,
             },
             {
@@ -435,7 +435,7 @@ const createDiscordMessage = async (packetGroup, text) => {
 
                 return {
                   name: `Gateway`,
-                  value: `[${gatewayDisplaName} (${hopText})](https://meshview.rouvier.org/packet_list/${nodeHex2id(envelope.gatewayId.replace("!", ""))})${gatewayDelay > 0 ? " (" + gatewayDelay + "ms)" : ""}`,
+                  value: `[${gatewayDisplaName} (${hopText})](https://meshview.kk6vsy.com/packet_list/${nodeHex2id(envelope.gatewayId.replace("!", ""))})${gatewayDelay > 0 ? " (" + gatewayDelay + "ms)" : ""}`,
                   inline: true,
                 };
               }),
@@ -459,12 +459,12 @@ const createDiscordMessage = async (packetGroup, text) => {
       ).length > 0
     ) {
       if (
-        baMsWebhookUrl &&
+       &&
         packetGroup.serviceEnvelopes[0].channelId === "MediumSlow"
       ) {
-        sendDiscordMessage(baMsWebhookUrl, content);
+        sendDiscordMessage, content);
       } else {
-        sendDiscordMessage(baWebhookUrl, content);
+        sendDiscordMessageLf, content);
       }
     }
 
@@ -475,8 +475,8 @@ const createDiscordMessage = async (packetGroup, text) => {
         ),
       ).length > 0
     ) {
-      if (svWebhookUrl) {
-        sendDiscordMessage(svWebhookUrl, content);
+      if (svLFWebhookUrl) {
+        sendDiscordMessage(svLFWebhookUrl, content);
       }
     }
   } catch (err) {
