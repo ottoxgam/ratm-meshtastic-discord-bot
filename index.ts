@@ -205,12 +205,14 @@ const getNodeInfos = async (nodeIds: string[], debug: boolean) => {
 };
 
 const getNodeName = (nodeId: string | number) => {
-  // redisClient.json.get(`socalmesh:nodeinfo:${nodeId}`).then((nodeInfo) => {
-  //   if (nodeInfo) {
-  //     logger.info(nodeInfo);
-  //   }
-  // });
-  return nodeDB[nodeId2hex(nodeId)] || "Unknown";
+  const nodeIdHex = nodeId2hex(nodeId);
+  console.log(`[DEBUG] Looking up Node ID: ${nodeIdHex}`);
+  console.log(`[DEBUG] nodeDB Entry:`, nodeDB[nodeIdHex]);  
+
+  const nodeData = nodeDB[nodeIdHex];
+  const longName = nodeData?.longName || "Unknown";
+  console.log(`[DEBUG] Final longName: ${longName}`);
+  return longName;
 };
 
 const nodeId2hex = (nodeId: string | number) => {
@@ -283,6 +285,7 @@ const createDiscordMessage = async (packetGroup, text) => {
     const to = nodeId2hex(packet.to);
     const from = nodeId2hex(packet.from);
     const nodeIdHex = nodeId2hex(from);
+    
 
     // discard text messages in the form of "seq 6034" "seq 6025"
     if (text.match(/^seq \d+$/)) {
