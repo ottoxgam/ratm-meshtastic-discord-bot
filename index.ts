@@ -619,7 +619,7 @@ socalmesh_client.on("message", async (topic: string, message: any) => {
 
         if (cache.add(shaHash(envelope))) {
           // periodically print the nodeDB to the console
-          //console.log(JSON.stringify(nodeDB));
+          console.log(JSON.stringify(nodeDB));
         }
 
         meshPacketQueue.add(envelope, topic, "socalmesh");
