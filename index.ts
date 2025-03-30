@@ -69,7 +69,7 @@ if (process.env.RBL_JSON_URL) {
   });
 }
 
-const mqttBrokerUrl = "mqtt://mqtt.bayme.sh"; // the original project took a nose dive, so this server is trash
+const mqttBrokerUrl = "mqtt://mqtt.meshtastic.org"; // the original project took a nose dive, so this server is trash
 const KK6VSYMqttBrokerUrl = "mqtt://192.168.10.14";
 const mqttUsername = "meshdev";
 const mqttPassword = "large4cats";
@@ -205,15 +205,12 @@ const getNodeInfos = async (nodeIds: string[], debug: boolean) => {
 };
 
 const getNodeName = (nodeId: string | number) => {
-  const nodeIdHex = nodeId2hex(nodeId);
-  console.log("[DEBUG] nodeId2hex output:", nodeId2hex(nodeId));
-  logger.debug(` Looking up Node ID by hex: ${nodeId}`);
-  logger.debug(` nodeDB Entry:`, nodeDB[nodeId]);  
-
-  const nodeData = nodeDB[nodeIdHex];
-  const longName = nodeData?.longName || "Unknown";
-  logger.debug(` Final longName: ${longName}`);
-  return longName;
+  // redisClient.json.get(`socalmesh:nodeinfo:${nodeId}`).then((nodeInfo) => {
+  //   if (nodeInfo) {
+  //     logger.info(nodeInfo);
+  //   }
+  // });
+  return nodeDB[nodeId2hex(nodeId)] || "Unknown";
 };
 
 const nodeId2hex = (nodeId: string | number) => {
@@ -285,7 +282,6 @@ const createDiscordMessage = async (packetGroup, text) => {
     const to = nodeId2hex(packet.to);
     const from = nodeId2hex(packet.from);
     const nodeIdHex = nodeId2hex(from);
-    
 
     // discard text messages in the form of "seq 6034" "seq 6025"
     if (text.match(/^seq \d+$/)) {
@@ -495,8 +491,7 @@ const createDiscordMessage = async (packetGroup, text) => {
 //   password: mqttPassword,
 // });
 
-//const socalmesh_client = mqtt.connect(KK6VSYMqttBrokerUrl, {
-  const socalmesh_client = mqtt.connect(mqttBrokerUrl, {
+const socalmesh_client = mqtt.connect(KK6VSYMqttBrokerUrl, {
   username: mqttUsername,
   password: mqttPassword,
 });
@@ -504,7 +499,6 @@ const createDiscordMessage = async (packetGroup, text) => {
 const socal_mesh_home_topics = [
   "msh/US/CA/socalmesh",
   "msh/US/CA/SoCalMesh",
-  "msh/US/bayarea",
 ];
 
 const private_mesh_topics = [
@@ -597,7 +591,7 @@ socalmesh_client.on("message", async (topic: string, message: any) => {
         ) {
           // return;
         } else {
-           logger.info("Message received on topic: " + topic);
+          // logger.info("Message received on topic: " + topic);
           return;
         }
 
