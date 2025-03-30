@@ -279,6 +279,7 @@ function processTextMessage(packetGroup: PacketGroup) {
 const createDiscordMessage = async (packetGroup, text) => {
   try {
     const packet = packetGroup.serviceEnvelopes[0].packet;
+    logger.debug("packet: " + packet);
     const to = nodeId2hex(packet.to);
     const from = nodeId2hex(packet.from);
     const nodeIdHex = nodeId2hex(from);
