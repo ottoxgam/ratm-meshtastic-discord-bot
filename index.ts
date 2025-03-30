@@ -104,7 +104,7 @@ const updateNodeDB = (
   try {
     nodeDB[node] = longName;
     if (process.env.REDIS_ENABLED === "true") {
-      redisClient.set(`baymesh:node:${node}`, longName);
+      redisClient.set(`socalmesh:node:${node}`, longName);
       const nodeInfoGenericObj = JSON.parse(JSON.stringify(nodeInfo));
       // remove leading "!" from id
       nodeInfoGenericObj.id = nodeInfoGenericObj.id.replace("!", "");
@@ -112,10 +112,10 @@ const updateNodeDB = (
       nodeInfoGenericObj.hopStart = hopStart;
       nodeInfoGenericObj.updatedAt = new Date().getTime();
       redisClient.json
-        .set(`baymesh:nodeinfo:${node}`, "$", nodeInfoGenericObj)
+        .set(`socalmesh:nodeinfo:${node}`, "$", nodeInfoGenericObj)
         .then(() => {
           // redisClient.json
-          //   .get(`baymesh:nodeinfo:${node}`) // , { path: "$.hwModel" }
+          //   .get(`socalmesh:nodeinfo:${node}`) // , { path: "$.hwModel" }
           //   .then((data) => {
           //     if (data) {
           //       logger.info(JSON.stringify(data));
@@ -125,12 +125,12 @@ const updateNodeDB = (
         .catch((err) => {
           // console.log(nodeInfoGenericObj);
           // if (err === "Error: Existing key has wrong Redis type") {
-          redisClient.type(`baymesh:nodeinfo:${node}`).then((result) => {
+          redisClient.type(`socalmesh:nodeinfo:${node}`).then((result) => {
             logger.info(result);
             if (result === "string") {
-              redisClient.del(`baymesh:nodeinfo:${node}`).then(() => {
+              redisClient.del(`socalmesh:nodeinfo:${node}`).then(() => {
                 redisClient.json
-                  .set(`baymesh:nodeinfo:${node}`, "$", nodeInfoGenericObj)
+                  .set(`socalmesh:nodeinfo:${node}`, "$", nodeInfoGenericObj)
                   .then(() => {
                     logger.info("deleted and re-added node info for: " + node);
                   })
@@ -141,7 +141,7 @@ const updateNodeDB = (
             }
           });
           // }
-          logger.error(`redis key: baymesh:nodeinfo:${node} ${err}`);
+          logger.error(`redis key: socalmesh:nodeinfo:${node} ${err}`);
         });
     }
     fs.writeFileSync(
@@ -163,7 +163,7 @@ const getNodeInfos = async (nodeIds: string[], debug: boolean) => {
     // const foo = nodeIds.slice(0, nodeIds.length - 1);
     nodeIds = Array.from(new Set(nodeIds));
     const nodeInfos = await redisClient.json.mGet(
-      nodeIds.map((nodeId) => `baymesh:nodeinfo:${nodeId2hex(nodeId)}`),
+      nodeIds.map((nodeId) => `socalmesh:nodeinfo:${nodeId2hex(nodeId)}`),
       "$",
     );
     if (debug) {
@@ -205,7 +205,7 @@ const getNodeInfos = async (nodeIds: string[], debug: boolean) => {
 };
 
 const getNodeName = (nodeId: string | number) => {
-  // redisClient.json.get(`baymesh:nodeinfo:${nodeId}`).then((nodeInfo) => {
+  // redisClient.json.get(`socalmesh:nodeinfo:${nodeId}`).then((nodeInfo) => {
   //   if (nodeInfo) {
   //     logger.info(nodeInfo);
   //   }
@@ -346,7 +346,7 @@ const createDiscordMessage = async (packetGroup, text) => {
     const content = {
       username: "Captain Hook",
       avatar_url:
-        "https://cdn.discordapp.com/app-icons/1240017058046152845/295e77bec5f9a44f7311cf8723e9c332.png",
+        "https://cdn.discordapp.com/avatars/1355684023615361146/af64924d6f2c32bacb64d1658739af3b.png",
       embeds: [
         {
           url: `https://meshview.kk6vsy.com/packet_list/${packet.from}`,
@@ -616,7 +616,7 @@ socalmesh_client.on("message", async (topic: string, message: any) => {
           //console.log(JSON.stringify(nodeDB));
         }
 
-        meshPacketQueue.add(envelope, topic, "baymesh");
+        meshPacketQueue.add(envelope, topic, "socalmesh");
       }
     }
   } catch (err) {
